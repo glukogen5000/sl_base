@@ -1,0 +1,23 @@
+{% extends 'sl_main/header.html' %}
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="jumbotron">
+
+            <p>
+                место для фильтров
+            </p>
+
+        </div>
+
+    </div>
+</div>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="document">
+    <button type="submit">Загрузить</button>
+
+</form>
+{% endblock %}

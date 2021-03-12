@@ -1,0 +1,88 @@
+{% extends 'sl_main/header.html' %}
+{% block content %}
+<br>
+<br>
+
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">
+            МРФ<br>
+            РФ<br>
+            Субьект РФ<br>
+            Адрес
+        </div>
+        <div class="col py-3 px-lg-5 border bg-light">
+            {{object.mrf}}<br>
+            {{object.rf}}<br>
+            {{object.subjectRF}}<br>
+            {{object.address}}
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">Количество узлов доступа и связи</div>
+        <div class="col py-3 px-lg-5 border bg-light">{{object.num_access_link}}</div>
+    </div>
+</div>
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">Статус</div>
+        <div class="col py-3 px-lg-5 border bg-light">{{object.status}}</div>
+    </div>
+</div>
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">
+            Подрядчик<br>
+            Статус<br>
+            Фактическая дата получения согласований/допуска на СМР
+        </div>
+        <div class="col py-3 px-lg-5 border bg-light">
+            {{object.contractor.name}}<br>
+            {{object.status}}<br>
+            {{object.date_access_SMR}}
+
+
+        </div>
+    </div>
+</div>
+
+
+<br>
+
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">Объемы</div>
+        <div class="col py-3 px-lg-5 border bg-light">Кабель<br>
+            Гофра<br>
+            Кабель-канал
+        </div>
+    </div>
+</div>
+<br>
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">
+            Объемы поданы<br>
+            ФОТО монтажа + схемы для ИД приложены<br>
+            СМР выполнены<br>
+            Дата приемки РТК<br>
+        </div>
+        <div class="col py-3 px-lg-5 border bg-light">
+            {{object.obemy_podany}}<br>
+            {{object.foto_montaj_upload}}<br>
+            {{object.smr_ready}}<br>
+            {{object.data_priemki_rtk}}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+<!--    <tr class="table-active"></tr>-->
+<!--    <tr class="table-success"></tr>-->
+<!--    <tr class="table-warning"></tr>-->
+<!--    <tr class="table-danger"></tr>-->

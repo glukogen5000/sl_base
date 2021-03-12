@@ -1,0 +1,36 @@
+{% extends 'sl_main/header.html' %}
+{% block content %}
+<div class="  text-center bg-light">
+    <div class="container">
+        <h3 class="mb-3">{{page_name}}</h3>
+    </div>
+</div>
+
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+
+
+        <table class="table table-bordered table-sm table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th class="align-middle text-center">Имя</th>
+                <th class="align-middle text-center">Телефон</th>
+                <th class="align-middle text-center">Адрес</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in contractor_list %}
+            <tr onclick="window.location.assign('{%url 'contractor' item.id %}');">
+                <td class="align-middle text-center">{{ item.name }}</td>
+                <td class="align-middle text-center">{{item.telephone}}</td>
+                <td class="align-middle text-center">{{item.address}}</td>
+            </tr>
+
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

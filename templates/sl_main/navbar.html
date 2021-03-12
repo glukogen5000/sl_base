@@ -1,0 +1,34 @@
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'base' %}">Safe-logic</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            {% if request.user.is_superuser == True %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base' %}">Главная <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'contractor_list' %}">Список подрядчиков</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'list_object'  %} ">Список объектов</a>
+            </li>
+            {% endif %}
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0">
+            <a class="nav-item" href="#"> {{request.user}}</a>
+            <a class="nav-link" href="{% url 'logout'  %} ">Выход</a>
+
+
+        </form>
+
+    </div>
+</nav>

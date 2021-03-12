@@ -1,0 +1,37 @@
+{% extends 'sl_main/header.html' %}
+{% block content %}
+<div class="  text-center bg-light">
+    <div class="container">
+        <h3 class="mb-3">{{contractor.name}}</h3>
+    </div>
+</div>
+
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+
+
+        <table class="table table-bordered table-sm table-hover">
+            <thead>
+            <tr>
+                <th class="align-middle text-center">1</th>
+                <th class="align-middle text-center">2</th>
+                <th class="align-middle text-center">3</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in list_item %}
+            <tr>
+                <td class="align-middle text-center">{{ object.address }}</td>
+                <td class="align-middle text-center">{{object.telephone}}</td>
+                <td class="align-middle text-center">{{object.address}}</td>
+            </tr>
+
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

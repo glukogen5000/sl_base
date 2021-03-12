@@ -1,0 +1,70 @@
+{% extends 'sl_main/header.html' %}
+{% block content %}
+<div class="  text-center bg-light">
+    <div class="container">
+        <h5 class="mb-3">тут будут фильтры</h5>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered table-sm">
+        <thead class="thead-dark">
+        <tr>
+
+            <th class="align-middle text-center">МРФ</th>
+            <th class="align-middle text-center">РФ</th>
+            <th class="align-middle text-center">Субъект РФ</th>
+            <th class="align-middle text-center">Адрес</th>
+            <th class="align-middle text-center">Кол-во узлов доступа и связи</th>
+            <th class="align-middle text-center">#</th>
+            <th class="align-middle text-center">Подрядчик</th>
+            <th class="align-middle text-center">Плановая дата завершение СМР</th>
+            <th class="align-middle text-center">Допуск получен</th>
+            <th class="align-middle text-center">Фактическая дата получения согласований/допуска на СМР</th>
+            <th class="align-middle text-center">Объемы поданы</th>
+            <th class="align-middle text-center">Фото СМР + схемы для ИД приложены</th>
+            <th class="align-middle text-center">СМР выполнены</th>
+            <th class="align-middle text-center">Дата приемки РТК</th>
+            <th class="align-middle text-center">Акт приемки</th>
+            <th class="align-middle text-center">Приемка РТК проведена</th>
+            <th class="align-middle text-center">ИД передана</th>
+            <th class="align-middle text-center">Срок завершения работ по договору</th>
+            <th class="align-middle text-center">Комментарии</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in item_project %}
+        <tr onclick="window.location.assign('{%url 'object' item.id %}');">
+            <td>{{ item.mrf }}</td>
+            <td>{{item.rf}}</td>
+            <td>{{item.subjectRF}}</td>
+            <td>{{item.address}}</td>
+            <td>{{item.num_access_link}}</td>
+            <td>{{item.pk}}</td>
+            <td>{{item.contractor.name}}</td>
+            <td>{{item.plan_data_ready_smr}}</td>
+            <td>{{item.access}}</td>
+            <td>{{item.date_access_SMR}}</td>
+            <td>{{item.obemy_podany}}</td>
+            <td>{{item.foto_montaj_upload}}</td>
+            <td>{{item.smr_ready}}</td>
+            <td>{{item.data_priemki_rtk}}</td>
+            <td>{{item.act_ready }}</td>
+            <td>{{item.rtk_ready}}</td>
+            <td>{{item.id_ready}}</td>
+            <td>{{item.data_ready_from_dogovor}}</td>
+            <td>{{item.komentariy}}</td>
+
+        </tr>
+
+
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{%endblock %}
+<!--    <tr class="table-active"></tr>-->
+<!--    <tr class="table-success"></tr>-->
+<!--    <tr class="table-warning"></tr>-->
+<!--    <tr class="table-danger"></tr>-->

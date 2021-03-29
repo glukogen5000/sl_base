@@ -1,13 +1,29 @@
 {% extends 'sl_main/header.html' %}
 {% block content %}
+
+
+
 <div class="  text-center bg-light">
     <div class="container">
-        <h3 class="mb-3">User Profile</h3>
+        <h3 class="mb-3">Список объектов </h3>
     </div>
 </div>
+
+
+{% load static %}
+<script src="{% static '/js/footable.js' %}"></script>
+<script src="{% static '/js/footable.min.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static '/css/footable.bootstrap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/css/footable.bootstrap.min.css' %}">
+
+<div class="form-group">
+
+</div>
 <div class="table-responsive">
-    <table class="table table-hover table-bordered table-sm">
-        <thead class="thead-dark">
+
+    <table class="table"  >
+
+        <thead>
         <tr>
 
             <th class="align-middle text-center">МРФ</th>
@@ -15,9 +31,9 @@
             <th class="align-middle text-center">Субъект РФ</th>
             <th class="align-middle text-center">Адрес</th>
             <th class="align-middle text-center">Кол-во узлов доступа и связи</th>
-            <th class="align-middle text-center">#</th>
-            <th class="align-middle text-center">Подрядчик</th>
-            <th class="align-middle text-center">Плановая дата завершение СМР</th>
+<!--            <th class="align-middle text-center">#</th>-->
+<!--            <th class="align-middle text-center">Подрядчик</th>-->
+            <th class="align-middle text-center"Плановая дата завершение СМР</th>
             <th class="align-middle text-center">Допуск получен</th>
             <th class="align-middle text-center">Фактическая дата получения согласований/допуска на СМР</th>
             <th class="align-middle text-center">Объемы поданы</th>
@@ -33,14 +49,14 @@
         </thead>
         <tbody>
         {% for item in all_item %}
-        <tr onclick="window.location.assign('{%url 'update_item' item.id %}');">
+        <tr onclick="window.location.assign('{%url 'object' item.id %}');">
             <td>{{ item.mrf }}</td>
             <td>{{item.rf}}</td>
             <td>{{item.subjectRF}}</td>
             <td>{{item.address}}</td>
             <td>{{item.num_access_link}}</td>
-            <td>{{item.pk}}</td>
-            <td>{{item.contractor.name}}</td>
+<!--            <td>{{item.pk}}</td>-->
+<!--            <td>{{item.contractor.name}}</td>-->
             <td>{{item.plan_data_ready_smr}}</td>
             <td>{{item.access}}</td>
             <td>{{item.date_access_SMR}}</td>
@@ -60,7 +76,12 @@
         {% endfor %}
         </tbody>
     </table>
+
+
+
 </div>
-
-
+<script>
+</script>
 {%endblock %}
+
+

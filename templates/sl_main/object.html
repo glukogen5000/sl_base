@@ -1,6 +1,12 @@
 {% extends 'sl_main/header.html' %}
 {% block content %}
 <br>
+{% if user.is_superuser %}
+<a class="btn btn-secondary" href="{% url 'admin:sl_main_itemproject_change' object.id %}" role="button">Редактировать</a>
+{% else %}
+<a class="btn btn-secondary" href="{%url 'update_item' object.id %}" role="button">Редактировать</a>
+{% endif %}
+
 <br>
 
 <div class="container px-lg-5">
@@ -77,9 +83,65 @@
             {{object.smr_ready}}<br>
             {{object.data_priemki_rtk}}
         </div>
-    </div>
-</div>
 
+
+    </div>
+    <br>
+    <div class="container px-lg-5">
+        <div class="row mx-lg-n5">
+            <div class="col py-3 px-lg-5 border bg-light">
+
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+                    Оставить сообщение
+                </button>
+
+                <form action="." method="post">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Оставить сообщение</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    {%csrf_token%}
+                                    {{form.text}}
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                    <button type="submit" class="btn btn-primary">Отправить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <br>
+                {%for com in comment%}
+                <ul class="list-group">
+                    <li class="list-group-item"><p class="font-weight-bold">{{com.author.first_name}}
+                        {{com.author.last_name}} </p>
+                        <p class="font-weight-bold"> Дата - {{com.date_create}}</p>
+
+                        <p>{{com.text}}</p>
+                    </li>
+                    <br>
+                    {%endfor%}
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
 
 {% endblock %}
 <!--    <tr class="table-active"></tr>-->

@@ -1,12 +1,16 @@
 from django.contrib import messages
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+
 from .models import *
-from .forms import ItemForm
+from .forms import *
 from .decorations import unauthentification_user, allowed_users, contractor_only, edit_contractor
+from .filters import ItemFilter
 
 
 # from .forms import UserForm
@@ -68,6 +72,8 @@ def index(request):
 def contractor(request, pk):
     contractor = Contractor.objects.get(id=pk)
     list_item = contractor.itemproject_set.all()
+    # .id.contractor.itemproject_set.all()
+    print(list_item)
 
     page_name = 'Подрядчик'
 
@@ -75,13 +81,36 @@ def contractor(request, pk):
     return render(request, 'sl_main/contractor.html', context)
 
 
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin', 'contractor'])
 @login_required(login_url='login')
 def object(request, pk):
-    object = ItemProject.objects.get(id=pk)
-
+    object1 = ItemProject.objects.get(id=pk)
+    comment = Comment.objects.filter(item_p=pk).order_by('-date_create')
+    my_form = CommentForm(request.POST or None)
+    if my_form.is_valid():
+        obj = my_form.save(commit=False)
+        obj.author = request.user
+        obj.item_p = object1
+        obj.save()
+        return HttpResponseRedirect('/object/' + pk)
+    # if request.method == 'POST':
+    #
+    #     post_data = request.POST or None
+    #     if post_data != None:
+    #         my_form = CommentForm(request.POST)
+    #         if my_form.is_valid():
+    #             text = my_form.cleaned_data.get('text')
+    #     # form = form.save(commit=False)
+    #             author = request.user
+    #             print (author)
+    #             item_p = object1
+    #             print(item_p)
+    #             Comment.objects.create(author=author,item_p=item_p, text = text)
+    # form.save
+    # return HttpResponseRedirect('/object/' + pk)
+    my_form = CommentForm()
     page_name = 'Объект'
-    context = {'object': object}
+    context = {'object': object1, 'comment': comment, 'form': my_form}
     return render(request, 'sl_main/object.html', context)
 
 
@@ -99,8 +128,12 @@ def contractor_list(request):
 def list_object(request):
     page_name = "Список объектов"
     item_project = ItemProject.objects.all()
+
+    myFilter = ItemFilter(request.GET, queryset=item_project)
+    item_project = myFilter.qs
+
     return render(request, 'sl_main/list_object.html', {'page_name': "Список объектов",
-                                                        'item_project': item_project})
+                                                        'item_project': item_project, 'myFilter': myFilter})
 
 
 @login_required(login_url='login')
@@ -111,33 +144,48 @@ def userPage(request):
     context = {'all_item': all_item}
     return render(request, 'sl_main/user.html', context)
 
+
+#
 @login_required(login_url='login')
 # @edit_contractor
 def updateItem(request, pk):
     item = ItemProject.objects.get(id=pk)
     form = ItemForm(instance=item)
-    all_item = request.user.contractor.itemproject_set.all()
+    comment = Comment.objects.filter(item_p=pk)
+    form_com = CommentForm()
     if request.method == 'POST':
         form = ItemForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
             return redirect('/')
 
-
-
-    context = {'form': form}
+    context = {'form': form, 'comment': comment, 'form_com': form_com}
     return render(request, 'sl_main/update_item.html', context)
 
-
 @login_required(login_url='login')
-def upload(request):
+def model_form_upload(request):
     if request.method == 'POST':
-        uploaded_file = request.FILES['document']
-        fs = FileSystemStorage()
-        fs.location = 'media'
-        name = fs.save(uploaded_file.name, uploaded_file)
-        url = fs.url(name)
-        # print(uploaded_file.name)
-        # print(uploaded_file.size)
-        print(url)
-    return render(request, 'sl_main/upload.html')
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+
+    else:
+        form = DocumentForm()
+    return render(request,  {
+        'form': form
+    })
+
+# @login_required(login_url='login')
+# def model_form_upload(View):
+#     def get(self, request):
+#         document_list = Document.objects.all()
+#         return render(self.request, 'sl_main/model_form_upload.html', {'documents': document_list})
+#
+#     def post(self, request):
+#         form = DocumentForm(self.request.POST, self.request.FILES)
+#         if form.is_valid():
+#             document = form.save()
+#             data = {'is_valid': True, 'name': document.file.name, 'url': document.file.url}
+#         else:
+#             data = {'is_valid': False}
+#         return JsonResponse(data)

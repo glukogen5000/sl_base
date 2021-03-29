@@ -3,25 +3,25 @@
 
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="jumbotron">
+    <div class="col-md-6">
 
-            <p>
-                место для фильтров
-            </p>
 
-        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <table class="table">
+                <tbody>
 
-    </div>
-</div>
-<form action="" method="post" >
-    {% csrf_token %}
-    {%for item in form%}
-    {{item}}
-    <br>
-    {%endfor%}
+                {%for item in form%}
+                <tr>
+                    <th>{{item.label}}</th>
+                    <td>{{item}}</td>
 
-    <input type="submit" name="Submit" >
+                </tr>
+
+                {%endfor%}
+                </tbody>
+            </table>
+            <input type="submit" name="Submit">
 
 </form>
 {% endblock %}

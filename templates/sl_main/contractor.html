@@ -20,10 +20,10 @@
             </thead>
             <tbody>
             {% for object in list_item %}
-            <tr>
-                <td class="align-middle text-center">{{ object.address }}</td>
-                <td class="align-middle text-center">{{object.telephone}}</td>
-                <td class="align-middle text-center">{{object.address}}</td>
+            <tr onclick="window.location.assign('{%url 'update_item' object.id %}');">
+                <td class="align-middle text-center">{{object.address }}</td>
+                <td class="align-middle text-center">{{object.status}}</td>
+                <td class="align-middle text-center">{{object.mrf}}</td>
             </tr>
 
 

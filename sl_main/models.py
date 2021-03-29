@@ -1,9 +1,9 @@
+import uuid
+
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from model_utils import Choices
-
-import datetime
-import os
 
 
 # def generate_unique_name(path):
@@ -36,6 +36,7 @@ class Contractor(models.Model):
 
 class ItemProject(models.Model):
     yes_no = Choices('Да', 'Нет')
+    upload_no = Choices('Загружен', 'Не загружен')
     mrf = models.CharField(verbose_name='МРФ', max_length=250, null=True, blank=True)
     rf = models.CharField(verbose_name='РФ', max_length=250, null=True, blank=True)
     subjectRF = models.CharField(verbose_name='Субьект РФ', max_length=250, null=True, blank=True)
@@ -43,34 +44,63 @@ class ItemProject(models.Model):
     num_access_link = models.CharField(verbose_name='Количество узлов доступа и связи', max_length=250, null=True,
                                        blank=True)
     status_item = Choices('не начат', 'проблемы с допуском', 'в работе', 'СМР заевершен', 'принят', 'КС подписаны')
-    status = models.CharField(choices=status_item, verbose_name='Статус', max_length=250, null=True, blank=True)
-    contractor = models.ForeignKey(Contractor, null=True, blank=True, on_delete=models.SET_NULL)
-    access = models.CharField(choices=yes_no, verbose_name='Допуск', max_length=250, null=True, blank=True)
+    status = models.CharField(choices=status_item, verbose_name='Статус', max_length=250, null=True, blank=True,
+                              default='не начат')
+    contractor = models.ForeignKey(Contractor, null=True, blank=True, on_delete=models.SET_NULL,verbose_name='Исполнитель')
+    access = models.CharField(choices=yes_no, verbose_name='Допуск', max_length=250, null=True, blank=True,
+                              default='Нет')
     date_access_SMR = models.DateField(verbose_name='Фактическая дата получения согласований/допуска на СМР',
                                        null=True, blank=True)
-    obemy_podany = models.CharField(choices=yes_no, verbose_name='Объемы поданы', max_length=250, null=True, blank=True)
-    ready_smr = models.CharField(choices=yes_no, verbose_name='СМР выполнены', max_length=250, null=True, blank=True)
+    obemy_podany = models.CharField(choices=yes_no, verbose_name='Объемы поданы', max_length=250, null=True, blank=True,
+                                    default='Нет')
+    ready_smr = models.CharField(choices=yes_no, verbose_name='СМР выполнены', max_length=250, null=True, blank=True,
+                                 default='Нет')
     data_priemki_rtk = models.DateField(verbose_name='Дата приемки РТК',
                                         null=True, blank=True)
-    foto_montaj_upload = models.CharField(choices=yes_no, verbose_name='ФОТО монтажа + схемы для ИД приложены',
+    foto_montaj_upload = models.CharField(choices=upload_no, default='Не загружен',
+                                          verbose_name='ФОТО монтажа + схемы для ИД',
                                           max_length=250, null=True, blank=True)
-    smr_ready = models.CharField(choices=yes_no, verbose_name='СМР выполнены', max_length=250, null=True, blank=True)
+    smr_ready = models.CharField(choices=yes_no, verbose_name='СМР выполнены', max_length=250, null=True, blank=True,
+                                 default='Нет')
     rtk_ready = models.CharField(choices=yes_no, verbose_name='Примека РТК проведена', max_length=250, null=True,
-                                 blank=True)
-    id_ready = models.CharField(choices=yes_no, verbose_name='ИД загружена', max_length=250, null=True,
-                                blank=True)
-    act_ready = models.CharField(choices=yes_no, verbose_name='ИД загружена', max_length=250, null=True,
-                                 blank=True)
+                                 blank=True, default='Нет')
+    id_ready = models.CharField(choices=upload_no, verbose_name='ИД', max_length=250, null=True,
+                                blank=True, default='Не загружен')
+    act_ready = models.CharField(choices=upload_no, verbose_name='Акт', max_length=250, null=True,
+                                 blank=True, default='Не загружен')
     plan_data_ready_smr = models.DateField(verbose_name='Плановая дата завершение СМР',
                                            null=True, blank=True)
     data_ready_from_dogovor = models.DateField(verbose_name='Срок завершения работ по договору',
                                                null=True, blank=True)
 
     komentariy = models.TextField(verbose_name='Коментарий', null=True, blank=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    comments = GenericRelation('comment')
 
     def __str__(self):
         return self.address
 
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'documents/object_{0}/{1}'.format(instance.item_proj.id, filename)
+
+
+class Document(models.Model):
+    description = models.CharField(max_length=255, blank=True)
+    file = models.FileField(upload_to=user_directory_path)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    item_proj = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.SET_NULL)
+    user_upload = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Автор загруженного файла')
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Автор коментария',
+                               related_name='comments_user')
+    item_p = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Объект',
+                               related_name='comments_items')
+    date_create = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(max_length=255, blank=True, null=True, verbose_name='Текст')
+    # parent = models.ForeignKey('self',blank=True, null=True,related_name='comment_children', on_delete=models.CASCADE)
 # class FeedFilePhoto(models.Model):
 #     file = models.FileField(upload_to=upload_location("pic"))
 #     feed = models.ForeignKey(ItemProject, on_delete=models.CASCADE)

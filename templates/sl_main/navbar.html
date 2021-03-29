@@ -20,6 +20,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'list_object'  %} ">Список объектов</a>
             </li>
+             <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin:auth_user_changelist'  %} ">Список пользователей</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin:auth_group_changelist'  %} ">Список групп</a>
+            </li>
             {% endif %}
         </ul>
 

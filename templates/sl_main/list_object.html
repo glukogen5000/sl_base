@@ -1,12 +1,19 @@
 {% extends 'sl_main/header.html' %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 {% block content %}
 <div class="  text-center bg-light">
     <div class="container">
-        <h5 class="mb-3">тут будут фильтры</h5>
+        <form method="get">
+            {{myFilter.form}}
+
+            <button class="btn btn-primary" type="submit">Поиск</button>
+        </form>
     </div>
 </div>
+
+
 <div class="table-responsive">
-    <table class="table table-hover table-bordered table-sm">
+    <table id="table_id" class="table table-hover table-bordered table-sm">
         <thead class="thead-dark">
         <tr>
 
@@ -15,7 +22,6 @@
             <th class="align-middle text-center">Субъект РФ</th>
             <th class="align-middle text-center">Адрес</th>
             <th class="align-middle text-center">Кол-во узлов доступа и связи</th>
-            <th class="align-middle text-center">#</th>
             <th class="align-middle text-center">Подрядчик</th>
             <th class="align-middle text-center">Плановая дата завершение СМР</th>
             <th class="align-middle text-center">Допуск получен</th>
@@ -39,7 +45,6 @@
             <td>{{item.subjectRF}}</td>
             <td>{{item.address}}</td>
             <td>{{item.num_access_link}}</td>
-            <td>{{item.pk}}</td>
             <td>{{item.contractor.name}}</td>
             <td>{{item.plan_data_ready_smr}}</td>
             <td>{{item.access}}</td>
@@ -60,9 +65,47 @@
         {% endfor %}
         </tbody>
     </table>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.js"></script>
+    <!-- needed to use moment.js for our date sorting-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
+
+
+    <!-- the second way to do it to integrate our buttons for export-->
+
+    <script>
+    $(document).ready( function () {
+
+    $.fn.dataTable.ext.errMode = 'throw';
+
+    $.fn.dataTable.moment('HH:mm MMM D, YY');
+    $.fn.dataTable.moment('dddd, MMMM Do, YYYY');
+    $.fn.dataTable.moment('DD/MM/YYYY');
+
+    $('#table_id').DataTable({
+    "paging":   false,
+    "searching":   false,
+
+    dom: 'B<"clear">lfrtip',
+    buttons: {
+        name: 'primary',
+        buttons: [  'csv', 'excel', ]
+
+        }}
+    );
+} );
+
+    </script>
 </div>
-
-
 {%endblock %}
 <!--    <tr class="table-active"></tr>-->
 <!--    <tr class="table-success"></tr>-->

@@ -2,11 +2,14 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 {% block content %}
 <div class="  text-center bg-light">
-    <div class="container">
+    <div class="container-fluid">
         <form method="get">
             {{myFilter.form}}
-
-            <button class="btn btn-primary" type="submit">Поиск</button>
+        <br>
+            <div class="container-fluid">
+             <a href="{%url 'list_object' %}" class="btn btn-secondary " role="button" aria-pressed="true">Очистить фильтр</a>
+            <button class="btn btn-secondary" type="submit">Поиск</button>
+                </div>
         </form>
     </div>
 </div>
@@ -38,6 +41,7 @@
         </tr>
         </thead>
         <tbody>
+
         {% for item in item_project %}
         <tr onclick="window.location.assign('{%url 'object' item.id %}');">
             <td>{{ item.mrf }}</td>
@@ -46,17 +50,36 @@
             <td>{{item.address}}</td>
             <td>{{item.num_access_link}}</td>
             <td>{{item.contractor.name}}</td>
-            <td>{{item.plan_data_ready_smr}}</td>
-            <td>{{item.access}}</td>
-            <td>{{item.date_access_SMR}}</td>
-            <td>{{item.obemy_podany}}</td>
-            <td>{{item.foto_montaj_upload}}</td>
-            <td>{{item.smr_ready}}</td>
-            <td>{{item.data_priemki_rtk}}</td>
-            <td>{{item.act_ready }}</td>
-            <td>{{item.rtk_ready}}</td>
-            <td>{{item.id_ready}}</td>
-            <td>{{item.data_ready_from_dogovor}}</td>
+            <td>{{item.plan_data_ready_smr|date:"d/m/Y"}}</td>
+
+            {%if item.access == "Да" %} <td class="table-success">{{item.access}}</td>
+            {%else%} <td class="table-danger">{{item.access}}</td> {%endif%}
+
+            <td>{{item.date_access_SMR|date:"d/m/Y"}}</td>
+
+            {%if item.obemy_podany == "Да" %}<td class="table-success">{{item.obemy_podany}}</td>
+            {%else%}  <td class="table-danger">{{item.obemy_podany}}</td>{%endif%}
+
+            {%if item.foto_montaj_upload == "Да" %}<td class="table-success">{{item.foto_montaj_upload}}</td>
+            {%else%}  <td class="table-danger">{{item.foto_montaj_upload}}</td>{%endif%}
+
+
+            {%if item.smr_ready == "Да" %}<td class="table-success">{{item.smr_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.smr_ready}}</td>{%endif%}
+
+            <td>{{item.data_priemki_rtk|date:"d/m/Y"}}</td>
+
+            {%if item.act_ready == "Да" %}<td class="table-success">{{item.act_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.act_ready}}</td>{%endif%}
+
+            {%if item.rtk_ready == "Да" %}<td class="table-success">{{item.rtk_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.rtk_ready}}</td>{%endif%}
+
+            {%if item.id_ready == "Да" %}<td class="table-success">{{item.id_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.id_ready}}</td>{%endif%}
+
+
+            <td>{{item.data_ready_from_dogovor|date:"d/m/Y"}}</td>
             <td>{{item.komentariy}}</td>
 
         </tr>
@@ -87,8 +110,7 @@
 
     $.fn.dataTable.ext.errMode = 'throw';
 
-    $.fn.dataTable.moment('HH:mm MMM D, YY');
-    $.fn.dataTable.moment('dddd, MMMM Do, YYYY');
+
     $.fn.dataTable.moment('DD/MM/YYYY');
 
     $('#table_id').DataTable({
@@ -103,6 +125,7 @@
         }}
     );
 } );
+
 
     </script>
 </div>

@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from django.contrib.auth.models import User
@@ -46,7 +47,8 @@ class ItemProject(models.Model):
     status_item = Choices('не начат', 'проблемы с допуском', 'в работе', 'СМР заевершен', 'принят', 'КС подписаны')
     status = models.CharField(choices=status_item, verbose_name='Статус', max_length=250, null=True, blank=True,
                               default='не начат')
-    contractor = models.ForeignKey(Contractor, null=True, blank=True, on_delete=models.SET_NULL,verbose_name='Исполнитель')
+    contractor = models.ForeignKey(Contractor, null=True, blank=True, on_delete=models.SET_NULL,
+                                   verbose_name='Исполнитель')
     access = models.CharField(choices=yes_no, verbose_name='Допуск', max_length=250, null=True, blank=True,
                               default='Нет')
     date_access_SMR = models.DateField(verbose_name='Фактическая дата получения согласований/допуска на СМР',
@@ -80,6 +82,15 @@ class ItemProject(models.Model):
     def __str__(self):
         return self.address
 
+    # def css_class(self):
+    #     status = self
+    #     print (status)
+    #     if status == 'Да':
+    #         return 'yes'
+    #     else:
+    #         return 'no'
+
+
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -87,11 +98,24 @@ def user_directory_path(instance, filename):
 
 
 class Document(models.Model):
-    description = models.CharField(max_length=255, blank=True)
+    description = models.CharField(max_length=255, blank=False)
     file = models.FileField(upload_to=user_directory_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     item_proj = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.SET_NULL)
-    user_upload = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Автор загруженного файла')
+    user_upload = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE,
+                                    verbose_name='Автор загруженного файла')
+
+    def __str__(self):
+        return self.description
+
+    def css_class(self):
+        name, extension = os.path.splitext(self.file.name)
+        if extension == '.pdf':
+            return 'pdf'
+        if extension == '.doc':
+            return 'word'
+        return 'other'
+
 
 class Comment(models.Model):
     author = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Автор коментария',
@@ -99,7 +123,30 @@ class Comment(models.Model):
     item_p = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Объект',
                                related_name='comments_items')
     date_create = models.DateTimeField(auto_now_add=True)
-    text = models.TextField(max_length=255, blank=True, null=True, verbose_name='Текст')
+    text = models.TextField(max_length=2550, blank=True, null=True, verbose_name='Текст')
+
+    def __str__(self):
+        return self.text
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=250, unique=True)
+    slug = models.SlugField(max_length=250, unique=True)
+    def __str__(self):
+        return self.name
+
+class MaterialforItem(models.Model):
+    date_create = models.DateTimeField(auto_now_add=True)
+    item_m = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Объект',
+                               )
+    kolichestvo = models.PositiveIntegerField(verbose_name="Количество материала")
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Объект',
+                               )
+    def __str__(self):
+        return self.category.name
+
+
+
     # parent = models.ForeignKey('self',blank=True, null=True,related_name='comment_children', on_delete=models.CASCADE)
 # class FeedFilePhoto(models.Model):
 #     file = models.FileField(upload_to=upload_location("pic"))

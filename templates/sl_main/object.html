@@ -1,14 +1,65 @@
 {% extends 'sl_main/header.html' %}
 {% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/css/lightbox.css' %}">
+<script src="{% static '/js/lightbox.js' %}"></script>
 <br>
-{% if user.is_superuser %}
-<a class="btn btn-secondary" href="{% url 'admin:sl_main_itemproject_change' object.id %}" role="button">Редактировать</a>
-{% else %}
-<a class="btn btn-secondary" href="{%url 'update_item' object.id %}" role="button">Редактировать</a>
-{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            {% if user.is_superuser %}
+            <a class="btn btn-secondary " href="{% url 'admin:sl_main_itemproject_change' object.id %}"
+               role="button">Редактировать</a>
+            {% else %}
+            <a class="btn btn-secondary " href="{%url 'update_item' object.id %}" role="button">Редактировать</a>
+            {% endif %}
+            <br>
+        </div>
+        <div class="col-sm">
+            <form name="file" action="." method="post" enctype="multipart/form-data">
 
+
+                <!-- Trigger the modal with a button -->
+                <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#myModal">Загрузить
+                    файлы
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                                <h4 class="modal-title"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <p></p>
+                                {% csrf_token %}
+                                <p>Описание</p>
+                                <p>{{form_doc.description }}</p>
+                                <br>
+                                <p>{{form_doc.file }}</p>
+
+                                <input type="hidden" name="form_type" value="formTwo">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Отправить</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
 <br>
-
+<br>
 <div class="container px-lg-5">
     <div class="row mx-lg-n5">
         <div class="col py-3 px-lg-5 border bg-light">
@@ -32,12 +83,13 @@
         <div class="col py-3 px-lg-5 border bg-light">Количество узлов доступа и связи</div>
         <div class="col py-3 px-lg-5 border bg-light">{{object.num_access_link}}</div>
     </div>
-</div>
+</div><br>
 <div class="container px-lg-5">
     <div class="row mx-lg-n5">
         <div class="col py-3 px-lg-5 border bg-light">Статус</div>
         <div class="col py-3 px-lg-5 border bg-light">{{object.status}}</div>
     </div>
+    <br>
 </div>
 <div class="container px-lg-5">
     <div class="row mx-lg-n5">
@@ -50,18 +102,15 @@
             {{object.contractor.name}}<br>
             {{object.status}}<br>
             {{object.date_access_SMR}}
-
-
         </div>
     </div>
 </div>
-
-
 <br>
 
 <div class="container px-lg-5">
     <div class="row mx-lg-n5">
         <div class="col py-3 px-lg-5 border bg-light">Объемы</div>
+
         <div class="col py-3 px-lg-5 border bg-light">Кабель<br>
             Гофра<br>
             Кабель-канал
@@ -83,62 +132,98 @@
             {{object.smr_ready}}<br>
             {{object.data_priemki_rtk}}
         </div>
+    </div>
+</div>
+
+<br>
+
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">
+            <p class="font-weight-bold ">Прикрепленные документы</p>
+
+
+            <ul class="list-group">
+                {%for f in files%}
+
+                {%if f.css_class == "pdf" %}
+                <li class="list-group-item">
+
+                    <h3><a href="{% get_media_prefix %}{{f.file}}" class="badge badge-secondary">{{f.description}}</a>
+                    </h3>
+
+                </li>
+                {% else %}
+
+                <li class="list-group-item"><h3><a href="{% get_media_prefix %}{{f.file}}" class="badge badge-secondary
+                                               data-lightbox=" image-{{forloop.counter}}"
+                    data-title="{{f.file.name}}">{{f.description}}</a></h3></li>
+
+                {%endif%}
+                <!--                    <a class="{{ f.css_class }}">{% get_media_prefix %}{{f.file}}</a>-->
+
+                {%endfor%}
+            </ul>
+        </div>
 
 
     </div>
-    <br>
-    <div class="container px-lg-5">
-        <div class="row mx-lg-n5">
-            <div class="col py-3 px-lg-5 border bg-light">
+</div>
 
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
-                    Оставить сообщение
-                </button>
+<br>
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5 border bg-light">
 
-                <form action="." method="post">
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Оставить сообщение</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+                Оставить сообщение
+            </button>
 
-                                    {%csrf_token%}
-                                    {{form.text}}
+            <form action="." method="post">
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Оставить сообщение</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
 
+                                {%csrf_token%}
+                                {{form.text}}
+                                <input type="hidden" name="form_type" value="formOne">
 
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                                    <button type="submit" class="btn btn-primary">Отправить</button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                                </button>
+                                <button type="submit" class="btn btn-primary">Отправить</button>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+            </form>
 
+            <br>
+            {%for com in comment%}
+            <ul class="list-group">
+                <li class="list-group-item"><p class="font-weight-bold">{{com.author.first_name}}
+                    {{com.author.last_name}} </p>
+                    <p class="font-weight-bold">{{com.date_create}}</p>
+
+                    <p>{{com.text}}</p>
+                </li>
                 <br>
-                {%for com in comment%}
-                <ul class="list-group">
-                    <li class="list-group-item"><p class="font-weight-bold">{{com.author.first_name}}
-                        {{com.author.last_name}} </p>
-                        <p class="font-weight-bold"> Дата - {{com.date_create}}</p>
-
-                        <p>{{com.text}}</p>
-                    </li>
-                    <br>
-                    {%endfor%}
-                </ul>
-
-            </div>
+                {%endfor%}
+            </ul>
 
         </div>
+
     </div>
+</div>
 
 
 </div>

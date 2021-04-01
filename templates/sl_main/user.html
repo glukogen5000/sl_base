@@ -33,7 +33,7 @@
             <th class="align-middle text-center">Кол-во узлов доступа и связи</th>
 <!--            <th class="align-middle text-center">#</th>-->
 <!--            <th class="align-middle text-center">Подрядчик</th>-->
-            <th class="align-middle text-center"Плановая дата завершение СМР</th>
+            <th class="align-middle text-center">Плановая дата завершение СМР</th>
             <th class="align-middle text-center">Допуск получен</th>
             <th class="align-middle text-center">Фактическая дата получения согласований/допуска на СМР</th>
             <th class="align-middle text-center">Объемы поданы</th>
@@ -57,17 +57,36 @@
             <td>{{item.num_access_link}}</td>
 <!--            <td>{{item.pk}}</td>-->
 <!--            <td>{{item.contractor.name}}</td>-->
-            <td>{{item.plan_data_ready_smr}}</td>
-            <td>{{item.access}}</td>
-            <td>{{item.date_access_SMR}}</td>
-            <td>{{item.obemy_podany}}</td>
-            <td>{{item.foto_montaj_upload}}</td>
-            <td>{{item.smr_ready}}</td>
-            <td>{{item.data_priemki_rtk}}</td>
-            <td>{{item.act_ready }}</td>
-            <td>{{item.rtk_ready}}</td>
-            <td>{{item.id_ready}}</td>
-            <td>{{item.data_ready_from_dogovor}}</td>
+            <td>{{item.plan_data_ready_smr|date:"d/m/Y"}}</td>
+
+            {%if item.access == "Да" %}<td class="table-success">{{item.access}}</td>
+            {%else%}  <td class="table-danger">{{item.access}}</td>{%endif%}
+
+            <td>{{item.date_access_SMR|date:"d/m/Y"}}</td>
+
+            {%if item.obemy_podany == "Да" %}<td class="table-success">{{item.obemy_podany}}</td>
+            {%else%}  <td class="table-danger">{{item.obemy_podany}}</td>{%endif%}
+
+            {%if item.foto_montaj_upload == "Да" %}<td class="table-success">{{item.foto_montaj_upload}}</td>
+            {%else%}  <td class="table-danger">{{item.foto_montaj_upload}}</td>{%endif%}
+
+            {%if item.smr_ready == "Да" %}<td class="table-success">{{item.smr_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.smr_ready}}</td>{%endif%}
+
+
+            <td>{{item.data_priemki_rtk|date:"d/m/Y"}}</td>
+
+            {%if item.act_ready == "Да" %}<td class="table-success">{{item.act_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.act_ready}}</td>{%endif%}
+
+            {%if item.rtk_ready == "Да" %}<td class="table-success">{{item.rtk_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.rtk_ready}}</td>{%endif%}
+
+            {%if item.id_ready == "Да" %}<td class="table-success">{{item.id_ready}}</td>
+            {%else%}  <td class="table-danger">{{item.id_ready}}</td>{%endif%}
+
+
+            <td>{{item.data_ready_from_dogovor|date:"d/m/Y"}}</td>
             <td>{{item.komentariy}}</td>
 
         </tr>

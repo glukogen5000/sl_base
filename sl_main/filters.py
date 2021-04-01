@@ -6,3 +6,6 @@ class ItemFilter(django_filters.FilterSet):
     class Meta:
         model = ItemProject
         fields = '__all__'
+        exclude = [
+            'id', 'komentariy'
+        ]

@@ -86,31 +86,33 @@ def contractor(request, pk):
 def object(request, pk):
     object1 = ItemProject.objects.get(id=pk)
     comment = Comment.objects.filter(item_p=pk).order_by('-date_create')
-    my_form = CommentForm(request.POST or None)
-    if my_form.is_valid():
-        obj = my_form.save(commit=False)
-        obj.author = request.user
-        obj.item_p = object1
-        obj.save()
-        return HttpResponseRedirect('/object/' + pk)
-    # if request.method == 'POST':
-    #
-    #     post_data = request.POST or None
-    #     if post_data != None:
-    #         my_form = CommentForm(request.POST)
-    #         if my_form.is_valid():
-    #             text = my_form.cleaned_data.get('text')
-    #     # form = form.save(commit=False)
-    #             author = request.user
-    #             print (author)
-    #             item_p = object1
-    #             print(item_p)
-    #             Comment.objects.create(author=author,item_p=item_p, text = text)
-    # form.save
-    # return HttpResponseRedirect('/object/' + pk)
+    files = object1.document_set.all()
     my_form = CommentForm()
-    page_name = 'Объект'
-    context = {'object': object1, 'comment': comment, 'form': my_form}
+    form_doc = DocumentForm()
+    # print (request.POST)
+    if request.method == 'POST' and 'formOne' in request.POST.values():
+        my_form = CommentForm(request.POST)
+        if my_form.is_valid():
+            obj = my_form.save(commit=False)
+            obj.author = request.user
+            obj.item_p = object1
+            obj.save()
+            return HttpResponseRedirect('/object/' + pk)
+
+    if request.method == 'POST' and 'formTwo' in request.POST.values():
+        form_doc = DocumentForm(request.POST, request.FILES)
+        if form_doc.is_valid():
+            obj = form_doc.save(commit=False)
+            obj.user_upload = request.user
+            obj.item_proj = object1
+            obj.save()
+        return HttpResponseRedirect('/object/' + pk)
+
+    #     my_form = CommentForm()
+    #     form_doc = DocumentForm()
+    # page_name = 'Объект'
+
+    context = {'object': object1, 'comment': comment, 'form': my_form, 'form_doc': form_doc, 'files': files}
     return render(request, 'sl_main/object.html', context)
 
 
@@ -162,6 +164,7 @@ def updateItem(request, pk):
     context = {'form': form, 'comment': comment, 'form_com': form_com}
     return render(request, 'sl_main/update_item.html', context)
 
+
 @login_required(login_url='login')
 def model_form_upload(request):
     if request.method == 'POST':
@@ -171,7 +174,7 @@ def model_form_upload(request):
 
     else:
         form = DocumentForm()
-    return render(request,  {
+    return render(request, {
         'form': form
     })
 

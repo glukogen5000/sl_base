@@ -7,7 +7,7 @@ from .models import Document
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ['file','item_proj']
+        fields = ['file', 'description',  'item_proj', 'user_upload']
 
 
 # class UploadFileForm(forms.Form):
@@ -19,6 +19,7 @@ class ItemForm(ModelForm):
         model = ItemProject
         fields = ['access', 'foto_montaj_upload', 'rtk_ready', 'act_ready', 'plan_data_ready_smr', 'komentariy']
 
+
 class ItemFullForm(ModelForm):
     class Meta:
         model = ItemProject
@@ -29,4 +30,3 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['text', 'author', 'item_p']
-

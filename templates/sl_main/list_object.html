@@ -2,19 +2,54 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 {% block content %}
 <div class="  text-center bg-light">
-    <div class="container-fluid">
-        <form method="get">
-            {{myFilter.form}}
-        <br>
-            <div class="container-fluid">
-             <a href="{%url 'list_object' %}" class="btn btn-secondary " role="button" aria-pressed="true">Очистить фильтр</a>
-            <button class="btn btn-secondary" type="submit">Поиск</button>
+    <form method="get">
+        <div class="container-fluid">
+            <div class="row">
+
+
+                <div class="col-md-2">
+                    <p>{{myFilter.form.mrf.label}}<br>{{myFilter.form.mrf}}</p>
+                    <p>{{myFilter.form.rf.label}}<br>{{myFilter.form.rf}}</p>
+                    <p>{{myFilter.form.subjectRF.label}} <br>{{myFilter.form.subjectRF}}</p>
                 </div>
-        </form>
-    </div>
+                <div class="col-md-2">
+                    <p>{{myFilter.form.address.label}}<br>{{myFilter.form.address}}</p>
+                    <p>{{myFilter.form.num_access_link.label}}<br>{{myFilter.form.num_access_link}}</p>
+                    <p>{{myFilter.form.contractor.label}}<br>{{myFilter.form.contractor}}</p>
+                </div>
+                <div class="col-md-2">
+                    <p>{{myFilter.form.plan_data_ready_smr.label}}<br>{{myFilter.form.plan_data_ready_smr}}</p>
+                    <p>{{myFilter.form.access.label}}<br>{{myFilter.form.access}}</p>
+                    <p>{{myFilter.form.date_access_SMR.label}}<br>{{myFilter.form.date_access_SMR}}</p>
+                </div>
+                <div class="col-md-2">
+                    <p>{{myFilter.form.obemy_podany.label}}<br>{{myFilter.form.obemy_podany}}</p>
+                    <p>{{myFilter.form.foto_montaj_upload.label}}<br>{{myFilter.form.foto_montaj_upload}}</p>
+                    <p>{{myFilter.form.smr_ready.label}}<br>{{myFilter.form.smr_ready}}</p>
+                </div>
+                <div class="col-md-2">
+                    <p>{{myFilter.form.data_priemki_rtk.label}}<br>{{myFilter.form.data_priemki_rtk}}</p>
+                    <p>{{myFilter.form.act_ready.label}}<br>{{myFilter.form.act_ready}}</p>
+                    <p>{{myFilter.form.rtk_ready.label}}<br>{{myFilter.form.rtk_ready}}</p>
+                </div>
+                <div class="col-md-2">
+                    <p>{{myFilter.form.id_ready.label}}<br>{{myFilter.form.id_ready}}</p>
+                    <p>{{myFilter.form.data_ready_from_dogovor.label}}<br>{{myFilter.form.data_ready_from_dogovor}}</p>
+                    <p>{{myFilter.form.komentariy.label}}<br>{{myFilter.form.komentariy}}</p>
+                </div>
+
+
+                <div class="container-fluid">
+                    <a href="{%url 'list_object' %}" class="btn btn-secondary " role="button" aria-pressed="true">Очистить
+                        фильтр</a>
+                    <button class="btn btn-secondary" type="submit">Поиск</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
 </div>
-
-
 <div class="table-responsive">
     <table id="table_id" class="table table-hover table-bordered table-sm">
         <thead class="thead-dark">
@@ -52,31 +87,52 @@
             <td>{{item.contractor.name}}</td>
             <td>{{item.plan_data_ready_smr|date:"d/m/Y"}}</td>
 
-            {%if item.access == "Да" %} <td class="table-success">{{item.access}}</td>
-            {%else%} <td class="table-danger">{{item.access}}</td> {%endif%}
+            {%if item.access == "Да" %}
+            <td class="table-success">{{item.access}}</td>
+            {%else%}
+            <td class="table-danger">{{item.access}}</td>
+            {%endif%}
 
             <td>{{item.date_access_SMR|date:"d/m/Y"}}</td>
 
-            {%if item.obemy_podany == "Да" %}<td class="table-success">{{item.obemy_podany}}</td>
-            {%else%}  <td class="table-danger">{{item.obemy_podany}}</td>{%endif%}
+            {%if item.obemy_podany == "Да" %}
+            <td class="table-success">{{item.obemy_podany}}</td>
+            {%else%}
+            <td class="table-danger">{{item.obemy_podany}}</td>
+            {%endif%}
 
-            {%if item.foto_montaj_upload == "Да" %}<td class="table-success">{{item.foto_montaj_upload}}</td>
-            {%else%}  <td class="table-danger">{{item.foto_montaj_upload}}</td>{%endif%}
+            {%if item.foto_montaj_upload == "Да" or item.foto_montaj_upload == "Загружен"%}
+            <td class="table-success">{{item.foto_montaj_upload}}</td>
+            {%else%}
+            <td class="table-danger">{{item.foto_montaj_upload}}</td>
+            {%endif%}
 
 
-            {%if item.smr_ready == "Да" %}<td class="table-success">{{item.smr_ready}}</td>
-            {%else%}  <td class="table-danger">{{item.smr_ready}}</td>{%endif%}
+            {%if item.smr_ready == "Да" %}
+            <td class="table-success">{{item.smr_ready}}</td>
+            {%else%}
+            <td class="table-danger">{{item.smr_ready}}</td>
+            {%endif%}
 
             <td>{{item.data_priemki_rtk|date:"d/m/Y"}}</td>
 
-            {%if item.act_ready == "Да" %}<td class="table-success">{{item.act_ready}}</td>
-            {%else%}  <td class="table-danger">{{item.act_ready}}</td>{%endif%}
+            {%if item.act_ready == "Да" or item.act_ready == "Загружен" %}
+            <td class="table-success">{{item.act_ready}}</td>
+            {%else%}
+            <td class="table-danger">{{item.act_ready}}</td>
+            {%endif%}
 
-            {%if item.rtk_ready == "Да" %}<td class="table-success">{{item.rtk_ready}}</td>
-            {%else%}  <td class="table-danger">{{item.rtk_ready}}</td>{%endif%}
+            {%if item.rtk_ready == "Да" %}
+            <td class="table-success">{{item.rtk_ready}}</td>
+            {%else%}
+            <td class="table-danger">{{item.rtk_ready}}</td>
+            {%endif%}
 
-            {%if item.id_ready == "Да" %}<td class="table-success">{{item.id_ready}}</td>
-            {%else%}  <td class="table-danger">{{item.id_ready}}</td>{%endif%}
+            {%if item.id_ready == "Да" or item.id_ready == "Загружен" %}
+            <td class="table-success">{{item.id_ready}}</td>
+            {%else%}
+            <td class="table-danger">{{item.id_ready}}</td>
+            {%endif%}
 
 
             <td>{{item.data_ready_from_dogovor|date:"d/m/Y"}}</td>
@@ -93,12 +149,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.css"/>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript"
             src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.js"></script>
     <!-- needed to use moment.js for our date sorting-->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
     <script type="text/javascript"
             src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
 
@@ -116,7 +175,7 @@
     $('#table_id').DataTable({
     "paging":   false,
     "searching":   false,
-
+    "scrollX": true,
     dom: 'B<"clear">lfrtip',
     buttons: {
         name: 'primary',
@@ -125,6 +184,12 @@
         }}
     );
 } );
+
+
+
+
+
+
 
 
     </script>

@@ -111,8 +111,9 @@ def object(request, pk):
     #     my_form = CommentForm()
     #     form_doc = DocumentForm()
     # page_name = 'Объект'
-
-    context = {'object': object1, 'comment': comment, 'form': my_form, 'form_doc': form_doc, 'files': files}
+    capacity = MaterialforItem.objects.filter(item_m=pk)
+    context = {'object': object1, 'comment': comment, 'form': my_form, 'form_doc': form_doc, 'files': files,
+               'capacity': capacity}
     return render(request, 'sl_main/object.html', context)
 
 

@@ -111,12 +111,33 @@
     <div class="row mx-lg-n5">
         <div class="col py-3 px-lg-5 border bg-light">Объемы</div>
 
-        <div class="col py-3 px-lg-5 border bg-light">Кабель<br>
-            Гофра<br>
-            Кабель-канал
+        <div class="col py-3 px-lg-5 border bg-light">
+
+
+            <table class="table">
+                <thead>
+
+                </thead>
+                <tbody>
+
+
+                {%for i in capacity%}
+                <tr>
+
+                    <td>{{i.category}}</td>
+                    <td>{{i.kolichestvo}}</td>
+
+                </tr>
+                {%endfor%}
+                </tbody>
+            </table>
+
+
         </div>
     </div>
 </div>
+
+
 <br>
 <div class="container px-lg-5">
     <div class="row mx-lg-n5">
@@ -156,8 +177,7 @@
                 {% else %}
 
                 <li class="list-group-item"><h3><a href="{% get_media_prefix %}{{f.file}}" class="badge badge-secondary
-                                               data-lightbox=" image-{{forloop.counter}}"
-                    data-title="{{f.file.name}}">{{f.description}}</a></h3></li>
+               data-lightbox=" image-{{forloop.counter}}" data-title="{{f.file.name}}">{{f.description}}</a></h3></li>
 
                 {%endif%}
                 <!--                    <a class="{{ f.css_class }}">{% get_media_prefix %}{{f.file}}</a>-->

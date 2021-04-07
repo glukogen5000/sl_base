@@ -67,7 +67,7 @@
             {%if item.obemy_podany == "Да" %}<td class="table-success">{{item.obemy_podany}}</td>
             {%else%}  <td class="table-danger">{{item.obemy_podany}}</td>{%endif%}
 
-            {%if item.foto_montaj_upload == "Да" %}<td class="table-success">{{item.foto_montaj_upload}}</td>
+            {%if item.foto_montaj_upload == "Да" or item.foto_montaj_upload == "Загружен" %}<td class="table-success">{{item.foto_montaj_upload}}</td>
             {%else%}  <td class="table-danger">{{item.foto_montaj_upload}}</td>{%endif%}
 
             {%if item.smr_ready == "Да" %}<td class="table-success">{{item.smr_ready}}</td>
@@ -76,13 +76,13 @@
 
             <td>{{item.data_priemki_rtk|date:"d/m/Y"}}</td>
 
-            {%if item.act_ready == "Да" %}<td class="table-success">{{item.act_ready}}</td>
+            {%if item.act_ready == "Да" or item.act_ready == "Загружен"  %}<td class="table-success">{{item.act_ready}}</td>
             {%else%}  <td class="table-danger">{{item.act_ready}}</td>{%endif%}
 
             {%if item.rtk_ready == "Да" %}<td class="table-success">{{item.rtk_ready}}</td>
             {%else%}  <td class="table-danger">{{item.rtk_ready}}</td>{%endif%}
 
-            {%if item.id_ready == "Да" %}<td class="table-success">{{item.id_ready}}</td>
+            {%if item.id_ready == "Да" or item.id_ready == "Загружен" %}<td class="table-success">{{item.id_ready}}</td>
             {%else%}  <td class="table-danger">{{item.id_ready}}</td>{%endif%}
 
 

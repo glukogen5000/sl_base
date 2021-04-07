@@ -7,26 +7,9 @@ from django.db import models
 from model_utils import Choices
 
 
-# def generate_unique_name(path):
-#     def apper(instance, filename):
-#         extension = "." + filename.split('.')[-1]
-#         basename = filename.split('.')[0]
-#         suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-#         new_filename = "_".join([basename, suffix]) + extension
-#         return os.path.join(path, new_filename)
-#     return apper
-#
-# def upload_location(instance, filename):
-#     name, ext = os.path.splitext(filename)
-#     path = f'media/{instance.slug}'
-#     suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-#     new_filename = "_".join([name, suffix]) + ext
-#     path = path + new_filename
-#     return path
-
 
 class Contractor(models.Model):
-    name = models.CharField(verbose_name='Название', max_length=250, null=True, blank=True)
+    name = models.CharField(verbose_name='Название', max_length=250)
     telephone = models.CharField(verbose_name='Телефон', max_length=250, null=True, blank=True)
     address = models.CharField(verbose_name='Адрес', max_length=250, null=True, blank=True)
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
@@ -77,7 +60,7 @@ class ItemProject(models.Model):
 
     komentariy = models.TextField(verbose_name='Коментарий', null=True, blank=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    comments = GenericRelation('comment')
+    # comments = GenericRelation('comment')
 
     def __str__(self):
         return self.address
@@ -91,18 +74,17 @@ class ItemProject(models.Model):
     #         return 'no'
 
 
-
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'documents/object_{0}/{1}'.format(instance.item_proj.id, filename)
 
 
 class Document(models.Model):
-    description = models.CharField(max_length=255, blank=False)
-    file = models.FileField(upload_to=user_directory_path)
+    description = models.CharField( verbose_name='Описание', max_length=255, blank=False)
+    file = models.FileField(verbose_name='Файл', upload_to=user_directory_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     item_proj = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.SET_NULL)
-    user_upload = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE,
+    user_upload = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL,
                                     verbose_name='Автор загруженного файла')
 
     def __str__(self):
@@ -123,7 +105,7 @@ class Comment(models.Model):
     item_p = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Объект',
                                related_name='comments_items')
     date_create = models.DateTimeField(auto_now_add=True)
-    text = models.TextField(max_length=2550, blank=True, null=True, verbose_name='Текст')
+    text = models.TextField(max_length=2550, blank=False, verbose_name='Текст')
 
     def __str__(self):
         return self.text
@@ -131,21 +113,23 @@ class Comment(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=250, unique=True)
-    slug = models.SlugField(max_length=250, unique=True)
+    # slug = models.SlugField(max_length=250, unique=True)
+
     def __str__(self):
         return self.name
+
 
 class MaterialforItem(models.Model):
     date_create = models.DateTimeField(auto_now_add=True)
     item_m = models.ForeignKey(ItemProject, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Объект',
                                )
-    kolichestvo = models.PositiveIntegerField(verbose_name="Количество материала")
-    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Объект',
-                               )
+    category = models.ForeignKey(Category, blank=False, on_delete=models.CASCADE, verbose_name='Материал',)
+    kolichestvo = models.CharField(max_length=250, verbose_name="Количество материала")
+
+
+
     def __str__(self):
         return self.category.name
-
-
 
     # parent = models.ForeignKey('self',blank=True, null=True,related_name='comment_children', on_delete=models.CASCADE)
 # class FeedFilePhoto(models.Model):

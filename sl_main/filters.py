@@ -7,5 +7,5 @@ class ItemFilter(django_filters.FilterSet):
         model = ItemProject
         fields = '__all__'
         exclude = [
-            'id', 'komentariy'
+            'id'
         ]
